@@ -1,0 +1,7 @@
+To get up and running:
+
+Open vscode terminal and type the following:
+[1] npm install
+[2] nodemon run
+
+here you go :).

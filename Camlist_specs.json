@@ -1,0 +1,418 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+    "version": "1.0.6",
+    "title": "Camlist Auction Feature",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "pets",
+      "description": "Everything about your Pets",
+      "externalDocs": {
+        "description": "Find out more",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "user",
+      "description": "Operations about user",
+      "externalDocs": {
+        "description": "Find out more about our store",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "auction",
+      "description": "Operations about auction",
+      "externalDocs": {
+        "description": "Find out more about our auctions",
+        "url": "http://swagger.io"
+      }
+    },
+    {
+      "name": "bid",
+      "externalDocs": {
+        "description": "Find out more about our bids",
+        "url": "http://swagger.io"
+      }
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/pets": {
+      "post": {
+        "tags": [
+          "pet"
+        ],
+        "summary": "Add a new pet to the store",
+        "description": "",
+        "operationId": "addPet",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Pet object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Pet"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "added successfuly"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "Creates a new user",
+        "operationId": "createUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/auctions/newauction": {
+      "post": {
+        "tags": [
+          "auction"
+        ],
+        "summary": "Create auction",
+        "description": "creates a new auction with items",
+        "operationId": "createAuction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Auction object that needs to be added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Auction"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/bids/{auctionId}": {
+      "get": {
+        "tags": [
+          "bid"
+        ],
+        "summary": "shows auction's bids",
+        "description": "",
+        "operationId": "showBids",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "auctionId",
+            "in": "path",
+            "description": "ID to retrieve auction bids",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/bids/placebid/{auctionId}": {
+      "post": {
+        "tags": [
+          "bid"
+        ],
+        "summary": "place a bid",
+        "description": "place a bid on a specific auction",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "auctionId",
+            "in": "path",
+            "description": "ID to bid on an auction",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "body of the bid",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Bid"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    },
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "https://petstore.swagger.io/oauth/authorize",
+      "flow": "implicit",
+      "scopes": {
+        "read:pets": "read your pets",
+        "write:pets": "modify pets in your account"
+      }
+    }
+  },
+  "definitions": {
+    "Auction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "xml": {
+            "wrapped": true
+          },
+          "items": {
+            "xml": {
+              "name": "pets"
+            },
+            "$ref": "#/definitions/Pet"
+          },
+          "format": "int32"
+        },
+        "registrants": {
+          "type": "array",
+          "xml": {
+            "wrapped": true
+          },
+          "items": {
+            "xml": {
+              "name": "user"
+            },
+            "description": "user Id"
+          }
+        },
+        "bids": {
+          "type": "array",
+          "xml": {
+            "wrapped": true
+          },
+          "items": {
+            "xml": {
+              "name": "bids"
+            },
+            "$ref": "#/definitions/Bid"
+          }
+        },
+        "results": {
+          "type": "array",
+          "xml": {
+            "wrapped": true
+          },
+          "items": {
+            "xml": {
+              "name": "bids"
+            },
+            "$ref": "#/definitions/Bid"
+          }
+        },
+        "rules": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string"
+        },
+        "endDate": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        }
+      }
+    },
+    "Bid": {
+      "type": "object",
+      "required": [
+        "auctionId",
+        "petId",
+        "userId",
+        "bidAmount"
+      ],
+      "properties": {
+        "auctionId": {
+          "type": "string"
+        },
+        "petId": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        },
+        "bidAmount": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Won",
+            "Lost",
+            "Un known"
+          ]
+        }
+      }
+    },
+    "Pet": {
+      "type": "object",
+      "required": [
+        "name",
+        "image",
+        "category"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "example": "doggie"
+        },
+        "image": {
+          "type": "string",
+          "xml": {
+            "wrapped": true
+          },
+          "items": {
+            "type": "string",
+            "xml": {
+              "name": "photoUrl"
+            }
+          }
+        },
+        "category": {
+          "type": "string",
+          "example": "dog/cat"
+        }
+      },
+      "xml": {
+        "name": "Pet"
+      }
+    },
+    "User": {
+      "type": "object",
+      "required": [
+        "username",
+        "email",
+        "password",
+        "phone"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
